@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+//allows linking to different routes
 import { Link } from 'react-router-dom';
 
+//navbar from bootstrap
 export default class Navbar extends Component {
-
     render() {
         return (
             <nav className="navbar navbar-dark bg-dark nabvar-expand-lg">

@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
+//allows linking to different routes
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+//creates table row
+//functional component
 const Exercise = props => (
     <tr>
         <td>{props.exercise.username}</td>
         <td>{props.exercise.description}</td>
         <td>{props.exercise.duration}</td>
+        {/* only want first part of the date */}
         <td>{props.exercise.date.substring(0,10)}</td>
         <td>
             <Link to={"/edit/"+props.exercise._id}>edit</Link> | <a href="#" onClick={() => { props.deleteExercise(props.exercise._id) }}>delete</a>
@@ -14,15 +18,17 @@ const Exercise = props => (
         </tr>
 )
 
+//constructor for exercise array
+//class component
 export default class ExercisesList extends Component {
     constructor(props) {
+         //all constructors in React needs to start with super(props)
         super(props);
-
         this.deleteExercise = this.deleteExercise.bind(this);
-
         this.state = {exercises: []};
     }
 
+    //axios GET for all exercises
     componentDidMount(){
         axios.get('http://localhost:5000/exercises/')
         .then(response => {
@@ -33,21 +39,24 @@ export default class ExercisesList extends Component {
         })
     }
 
+    //axios DELETE for single exercise
     deleteExercise(id) {
         axios.delete('http://localhost:5000/exercises/'+id)
         .then(res => console.log(res.data));
-
+        //iterates over exercises and leaves out current mongo id so it deletes from table
         this.setState({
             exercises: this.state.exercises.filter(el => el._id !== id)
         })
     }
 
+    //iterates over all exercises and returns component (row of table) for each
     exerciseList() {
         return this.state.exercises.map(currentexercise => {
             return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id}/>;
         })
     }
 
+    //renders Logged Exercises table
     render(){
         return (
             <div>
@@ -63,6 +72,7 @@ export default class ExercisesList extends Component {
                        </tr>
                    </thead>
                    <tbody>
+                       {/* returns rows of table */}
                        { this.exerciseList() }
                    </tbody>
                </table>
